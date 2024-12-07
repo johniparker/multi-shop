@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import Products from "../components/Products";
 
 const ProductPage = () => {
-    
-    return (<p>PRODUCTS</p>)
+  return (
+    <>
+      <Products />
+    </>
+  );
 };
 
 export default ProductPage;
