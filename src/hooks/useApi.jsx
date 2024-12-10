@@ -1,42 +1,88 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
+const BASE_URL = 'http://localhost:3000';
+
 const useApi = () => {
-  // Initialize Axios instance
-  const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    timeout: 10000, // Optional: Set a timeout for requests
-  });
-
-  // Hook state
-  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  // Function to make API requests
-  const fetchData = useCallback(async (endpoint, method = 'GET') => {
-    setLoading(true);
-    setError(null);
+  // Helper function to handle API errors
+  const handleError = (err) => {
+    setError(err.response?.data?.message || err.message);
+  };
 
-    console.log('ENDPOINT: ', endpoint);
-
+  // Get all published products
+  const getPublishedProducts = async (options = {}) => {
     try {
-      const response = await axiosInstance({
-        url: endpoint,
-        method
-      });
-      setData(response.data);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      const { groupBy, search } = options;
+      const params = new URLSearchParams();
+      if (groupBy) params.append('groupBy', groupBy);
+      if (search) params.append('search', search);
 
-  return { data, error, loading, fetchData };
+      const response = await axios.get(`${BASE_URL}/products/published?${params}`);
+      return response.data;
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  // Get all products
+  const getAllProducts = async (options = {}) => {
+    try {
+      const { groupBy, search } = options;
+      const params = new URLSearchParams();
+      if (groupBy) params.append('groupBy', groupBy);
+      if (search) params.append('search', search);
+
+      const response = await axios.get(`${BASE_URL}/products/all?${params}`);
+      return response.data;
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  // Update a specific product
+  const updateProduct = async (productId, productData) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/products/${productId}`, {
+        product: productData,
+      });
+      return response.data;
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  // Get admin settings
+  const getAdminSettings = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/admin`);
+      return response.data;
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  // Update admin settings
+  const updateAdminSettings = async (adminData) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/admin`, {
+        admin: adminData,
+      });
+      return response.data;
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  return {
+    getPublishedProducts,
+    getAllProducts,
+    updateProduct,
+    getAdminSettings,
+    updateAdminSettings,
+    error, // Expose error state
+  };
 };
 
 export default useApi;

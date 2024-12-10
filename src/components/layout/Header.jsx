@@ -16,7 +16,7 @@ const Header = ({ toggleNavbar }) => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          Course
+          Welcome!
         </Typography>
       </Toolbar>
     </AppBar>

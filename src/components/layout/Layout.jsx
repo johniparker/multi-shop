@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import Header from './Header';
 import Navbar from './Navbar';
 import { Box } from '@mui/material';
+import Products from '../Products'; 
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [productType, setProductType] = useState('');
 
   // Function to toggle the visibility of the Navbar
   const toggleNavbar = () => {
@@ -31,7 +33,7 @@ const Layout = ({ children }) => {
             overflowY: 'auto',
           }}
         >
-          <Navbar />
+          <Navbar setProductType={setProductType} />
         </Box>
       )}
 
@@ -47,7 +49,7 @@ const Layout = ({ children }) => {
           height: 'calc(100vh - 64px)', // Full height minus header height
         }}
       >
-        {children}
+        <Products productType={productType} />
       </Box>
     </Box>
   );

@@ -1,10 +1,29 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthProvider'; // Import the useAuth hook
+import { useState, useEffect } from 'react';
+import useApi from '../../hooks/useApi';
 import { Drawer, List, ListItem, ListItemText, Button, Typography, Box } from '@mui/material';
 
-const Navbar = () => {
-  const { user, logout } = useAuth(); // Get user and logout function from context
+const Navbar = ({ setProductType }) => {
+  const { getPublishedProducts, error } = useApi();
+  const [productTypes, setProductTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState('');
+
+  useEffect(() => {
+    const fetchAndExtractProductTypes = async () => {
+      const response = await getPublishedProducts();
+      if (response && response.products) {
+        // Extract unique product types from the response
+        const types = Array.from(new Set(response.products.map((product) => product.product_type)));
+        setProductTypes(types); // Update state with fetched product types
+      }
+    };
+
+    fetchAndExtractProductTypes();
+  }, []);
+
+  const handleProductTypeClick = (type) => {
+    setProductType(type); // Update filter in parent component
+    setSelectedType(type); // Track the selected product type
+  };
 
   return (
     <Drawer
@@ -18,40 +37,47 @@ const Navbar = () => {
         },
       }}
     >
-      <Box sx={{ padding: 2 }}>
+      {/* <Box sx={{ padding: 2 }}>
         <Typography variant="h6" noWrap>
           Course
         </Typography>
-      </Box>
-      <List>
-        <ListItem button component={Link} to="/">
-          <ListItemText primary="Home" />
-        </ListItem>
-        {user ? (
-          <>
-            <ListItem button component={Link} to="/profile">
-              <ListItemText primary="Profile" />
-            </ListItem>
-            <ListItem button component={Link} to="/announcements">
-              <ListItemText primary="Announcements" />
-            </ListItem>
-            <ListItem button component={Link} to="/pages">
-              <ListItemText primary="Pages" />
-            </ListItem>
-            <ListItem button component={Link} to="/modules">
-              <ListItemText primary="Modules" />
-            </ListItem>
-            <ListItem>
-              <Button onClick={logout} color="primary" variant="outlined">
-                Logout
-              </Button>
-            </ListItem>
-          </>
-        ) : (
-          <ListItem button component={Link} to="/login">
-            <ListItemText primary="Login" />
-          </ListItem>
+        {user && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body1">Welcome, {user.name}</Typography>
+            <Button onClick={logout} variant="contained" sx={{ mt: 1 }}>
+              Logout
+            </Button>
+          </Box>
         )}
+      </Box> */}
+      <List>
+        <ListItem>
+          <ListItemText primary="Filter by Product Type" />
+        </ListItem>
+        <ListItem 
+          button
+          selected={selectedType === ''} 
+          onClick={() => handleProductTypeClick('')}>
+          <ListItemText primary="All Products" />
+        </ListItem>
+        {/* Render product types */}
+        {error ? (
+          <Typography color="error" sx={{ padding: 2 }}>
+            Error loading filters
+          </Typography>
+        ) : (
+          productTypes.map((type) => (
+            <ListItem
+              button
+              key={type}
+              selected={type === selectedType}
+              onClick={() => handleProductTypeClick(type)} // Set the product type filter
+            >
+              <ListItemText primary={type.charAt(0).toUpperCase() + type.slice(1)} />
+            </ListItem>
+          ))
+        )}
+        
       </List>
     </Drawer>
   );
