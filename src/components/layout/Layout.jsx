@@ -5,10 +5,10 @@ import { Box } from "@mui/material";
 import ProductPage from "../../pages/ProductPage";
 import SearchBar from "../SearchBar";
 
-const Layout = () => {
+const Layout = ({ children }) => {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [productType, setProductType] = useState("");
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Function to toggle the visibility of the Navbar
   const toggleNavbar = () => {
@@ -51,8 +51,7 @@ const Layout = () => {
           height: "calc(100vh - 64px)", // Full height minus header height
         }}
       >
-        <SearchBar setSearchTerm={setSearchTerm} />
-        <ProductPage productType={productType} searchTerm={searchTerm} />
+        {children}
       </Box>
     </Box>
   );

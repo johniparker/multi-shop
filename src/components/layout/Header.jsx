@@ -1,7 +1,10 @@
-import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthProvider";
 
 const Header = ({ toggleNavbar }) => {
+  const { user, logout } = useAuth();
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -17,6 +20,20 @@ const Header = ({ toggleNavbar }) => {
         <Typography variant="h6" noWrap component="div">
           Welcome!
         </Typography>
+        {user ? (
+          <Button onClick={logout} color="red" variant="outlined">
+            Logout
+          </Button>
+        ) : (
+          <Button
+            component={Link}
+            to="/login"
+            color="red"
+            variant="outlined"
+          >
+            Login
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );
