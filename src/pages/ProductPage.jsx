@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { Box } from "@mui/material";
 import Products from "../components/Products";
 
-const ProductPage = () => {
+const ProductPage = ({ productType, searchTerm }) => {
+  console.log("ProductType:", productType);
+  console.log('searchterm: ', searchTerm);
   return (
-    <>
-      <Products />
-    </>
+    <Box>
+      <Products productType={productType} searchTerm={searchTerm} />
+    </Box>
   );
 };
 

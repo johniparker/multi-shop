@@ -4,14 +4,12 @@ import Layout from "./components/layout/Layout";
 
 function App() {
   return (
-    <>
-      <Router>
-        <Layout>
-          <RouterProvider />
-        </Layout>
-      </Router>
-    </>
-  )
+    <Router>
+      <Layout>
+        <RouterProvider />
+      </Layout>
+    </Router>
+  );
 }
 
 export default App;

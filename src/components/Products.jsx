@@ -3,26 +3,34 @@ import { Grid, Typography, Box } from "@mui/material";
 import useApi from "../hooks/useApi";
 import Product from "./Product";
 
-const Products = ({ productType }) => {
+const Products = ({ productType, searchTerm }) => {
   const { getPublishedProducts } = useApi();
 
   const [products, setProducts] = useState([]);
   const [groupedProducts, setGroupedProducts] = useState({});
-  console.log(productType);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      if (productType) {
-        // Fetch filtered products
-        const response = await getPublishedProducts({ search: productType });
-        if (response && response.products) {
-          setProducts(response.products);
+      const options = {};
+
+      if (searchTerm) {
+        options.search = searchTerm; // Apply search filter
+      }
+      else if (productType) {
+        options.search = productType; // Apply product type filter
+      }
+
+      else {
+        options.groupBy = "product_type";
+      }
+
+      const response = await getPublishedProducts(options);
+
+      if (response && response.products) {
+        if (productType || searchTerm) {
+          setProducts(response.products); // Display the filtered products
           setGroupedProducts({});
-        }
-      } else {
-        // Fetch and group products by product type
-        const response = await getPublishedProducts({ groupBy: "product_type" });
-        if (response && response.products) {
+        } else {
           setGroupedProducts(response.products); // Response is already grouped by type
           setProducts([]);
         }
@@ -30,7 +38,7 @@ const Products = ({ productType }) => {
     };
 
     fetchProducts();
-  }, [productType]);
+  }, [productType, searchTerm]);
 
   return (
     <Box>
