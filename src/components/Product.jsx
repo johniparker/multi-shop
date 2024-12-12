@@ -1,22 +1,30 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { useCart } from "../context/CartContext";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 
 const Product = ({ product }) => {
   const { user } = useAuth();
+  const { addToCart } = useCart();
   const navigate = useNavigate();
 
   const handleRedirect = (productId) => {
-    navigate(`/edit-product/${productId}`)
-  }
+    navigate(`/edit-product/${productId}`);
+  };
 
   return (
     <Card sx={{ margin: 2 }}>
       <CardMedia
         component="img"
         height="200"
-        image={product.image || 'https://via.placeholder.com/300'} // Default image if none provided
+        image={product.image || "https://via.placeholder.com/300"} // Default image if none provided
         alt={product.title}
       />
       <CardContent>
@@ -32,8 +40,15 @@ const Product = ({ product }) => {
         <Typography variant="body2" color="text.secondary">
           <strong>Type:</strong> {product.product_type}
         </Typography>
-        <Typography variant="body2" color={product.inventory > 0 ? 'green' : 'red'} mt={1}>
-          <strong>Inventory:</strong> {product.inventory > 0 ? `${product.inventory} in stock` : 'Out of stock'}
+        <Typography
+          variant="body2"
+          color={product.inventory > 0 ? "green" : "red"}
+          mt={1}
+        >
+          <strong>Inventory:</strong>{" "}
+          {product.inventory > 0
+            ? `${product.inventory} in stock`
+            : "Out of stock"}
         </Typography>
         {product.published ? (
           <Typography variant="caption" color="text.secondary">
@@ -44,7 +59,11 @@ const Product = ({ product }) => {
             Unpublished
           </Typography>
         )}
-        {user ? (<Button onClick={() => handleRedirect(product.id)}>Edit</Button>): (<></>)}
+        {user ? (
+          <Button onClick={() => handleRedirect(product.id)}>Edit</Button>
+        ) : (
+          <Button onClick={() => addToCart(product)}>Add To Cart</Button>
+        )}
       </CardContent>
     </Card>
   );
