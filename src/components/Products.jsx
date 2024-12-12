@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Typography, Box } from "@mui/material";
+import { useAuth } from "../context/AuthProvider";
 import useApi from "../hooks/useApi";
 import Product from "./Product";
 
 const Products = ({ productType, searchTerm }) => {
   const { getPublishedProducts } = useApi();
+  const { user } = useAuth();
+  console.log('USER: ', user);
 
   const [products, setProducts] = useState([]);
   const [groupedProducts, setGroupedProducts] = useState({});

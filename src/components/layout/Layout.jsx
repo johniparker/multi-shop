@@ -1,14 +1,14 @@
 import React, { useState } from "react";
+import { Routes, Route} from "react-router-dom";
 import Header from "./Header";
 import Navbar from "./Navbar";
-import { Box } from "@mui/material";
 import ProductPage from "../../pages/ProductPage";
-import SearchBar from "../SearchBar";
+import LoginPage from "../../pages/LoginPage";
+import { Box } from "@mui/material";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [productType, setProductType] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
 
   // Function to toggle the visibility of the Navbar
   const toggleNavbar = () => {
@@ -51,7 +51,10 @@ const Layout = ({ children }) => {
           height: "calc(100vh - 64px)", // Full height minus header height
         }}
       >
-        {children}
+        <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<ProductPage productType={productType} />} />
+        </Routes>
       </Box>
     </Box>
   );

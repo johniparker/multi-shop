@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { Box } from "@mui/material";
 import Products from "../components/Products";
+import SearchBar from "../components/SearchBar";
 
-const ProductPage = ({ productType, searchTerm }) => {
+const ProductPage = ({ productType }) => {
+  const [searchTerm, setSearchTerm] = useState('');
   console.log("ProductType:", productType);
-  console.log('searchterm: ', searchTerm);
   return (
     <Box>
+      <SearchBar setSearchTerm={setSearchTerm} />
       <Products productType={productType} searchTerm={searchTerm} />
     </Box>
   );
