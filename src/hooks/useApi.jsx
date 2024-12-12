@@ -41,6 +41,15 @@ const useApi = () => {
     }
   };
 
+  const getProductById = async (productId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/products/${productId}`);
+      return response.data;
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
   // Update a specific product
   const updateProduct = async (productId, productData) => {
     try {
@@ -78,6 +87,7 @@ const useApi = () => {
   return {
     getPublishedProducts,
     getAllProducts,
+    getProductById,
     updateProduct,
     getAdminSettings,
     updateAdminSettings,

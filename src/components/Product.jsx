@@ -1,7 +1,16 @@
 import React from 'react';
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../context/AuthProvider";
+import { Button, Card, CardContent, CardMedia, Typography } from '@mui/material';
 
 const Product = ({ product }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleRedirect = (productId) => {
+    navigate(`/edit-product/${productId}`)
+  }
+
   return (
     <Card sx={{ maxWidth: 300, margin: 2 }}>
       <CardMedia
@@ -35,6 +44,7 @@ const Product = ({ product }) => {
             Unpublished
           </Typography>
         )}
+        {user ? (<Button onClick={() => handleRedirect(product.id)}>Edit</Button>): (<></>)}
       </CardContent>
     </Card>
   );

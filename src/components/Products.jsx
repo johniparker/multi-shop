@@ -5,7 +5,7 @@ import useApi from "../hooks/useApi";
 import Product from "./Product";
 
 const Products = ({ productType, searchTerm }) => {
-  const { getPublishedProducts } = useApi();
+  const { getPublishedProducts, getAllProducts } = useApi();
   const { user } = useAuth();
   console.log('USER: ', user);
 
@@ -13,7 +13,7 @@ const Products = ({ productType, searchTerm }) => {
   const [groupedProducts, setGroupedProducts] = useState({});
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchPublishedProducts = async () => {
       const options = {};
 
       if (searchTerm) {
@@ -40,13 +40,42 @@ const Products = ({ productType, searchTerm }) => {
       }
     };
 
-    fetchProducts();
+    const fetchAllProducts = async () => {
+      const options = {};
+
+      if (searchTerm) {
+        options.search = searchTerm; // Apply search filter
+      }
+      else if (productType) {
+        options.search = productType; // Apply product type filter
+      }
+
+      else {
+        options.groupBy = "product_type";
+      }
+      const response = await getAllProducts(options);
+
+      if (response && response.products) {
+        if (productType || searchTerm) {
+          setProducts(response.products); // Display the filtered products
+          setGroupedProducts({});
+        } else {
+          setGroupedProducts(response.products); // Response is already grouped by type
+          setProducts([]);
+        }
+      }
+    };
+
+    user ? fetchAllProducts() : fetchPublishedProducts();
   }, [productType, searchTerm]);
 
   return (
     <Box>
       <Typography variant="h4" component="h1" gutterBottom>
-        {productType ? productType : "Products"}
+        {user ? "Admin Products" : "Products"}
+      </Typography>
+      <Typography variant="h4" component="h2" gutterBottom>
+        {productType ? productType : ""}
       </Typography>
       {Object.keys(groupedProducts).length > 0 ? (
         Object.entries(groupedProducts).map(([type, products]) => (

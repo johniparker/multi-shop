@@ -4,6 +4,7 @@ import Header from "./Header";
 import Navbar from "./Navbar";
 import ProductPage from "../../pages/ProductPage";
 import LoginPage from "../../pages/LoginPage";
+import EditProduct from "../EditProduct";
 import { Box } from "@mui/material";
 
 const Layout = () => {
@@ -53,6 +54,7 @@ const Layout = () => {
       >
         <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/edit-product/:productId" element={<EditProduct />} />
             <Route path="/" element={<ProductPage productType={productType} />} />
         </Routes>
       </Box>

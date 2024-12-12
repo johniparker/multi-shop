@@ -87,7 +87,18 @@ const Navbar = ({ setProductType }) => {
           )}
         </List>
       ) : (
-        <Button onClick={handleRedirect}>Products</Button>
+        <List>
+          <ListItem>
+            <ListItemText primary="Filter by Product Type" />
+          </ListItem>
+          <ListItem
+            button
+            selected={selectedType === ""}
+            onClick={handleRedirect}
+          >
+            <ListItemText primary="View Products" />
+          </ListItem>
+        </List>
       )}
     </Drawer>
   );
