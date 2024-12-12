@@ -1,17 +1,19 @@
-import { useForm } from "../../context/FormProvider";
+import { TextField } from "@mui/material";
 
-const TextInput = ({ label, name, type = "text" }) => {
-  const form = useForm();
+const TextInput = ({ label, name, value, onChange, type = "text", multiline=false }) => {
   return (
-    <label>
-      {label}
-      <input
-        name={name}
-        type={type}
-        value={form.state?.[name] || ""}
-        onChange={(e) => form.setValue(name, e.target.value)}
-      />
-    </label>
+    <TextField
+      label={label}
+      name={name}
+      value={value}
+      onChange={onChange}
+      type={type}
+      multiline={multiline} // Enables textarea
+      rows={multiline ? 4 : 1} // Controls rows for textarea
+      fullWidth
+      variant="outlined"
+      margin="normal"
+    />
   );
 };
 

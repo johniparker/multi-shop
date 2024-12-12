@@ -2,8 +2,8 @@ import { createContext, useContext, useState } from "react";
 
 const FormContext = createContext();
 
-export const FormProvider = ({ onSubmit, defaultValue = {}, children }) => {
-    const [state, setState] = useState(defaultValue);
+export const FormProvider = ({ onSubmit, children }) => {
+    const [state, setState] = useState({});
     const [errors, setErrors] = useState({});
 
     const setValue = (name, value) => {

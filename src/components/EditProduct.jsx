@@ -8,6 +8,7 @@ import { Box, Typography, Container, Alert } from "@mui/material";
 
 const EditProduct = () => {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
   const { getProductById, updateProduct } = useApi();
   const navigate = useNavigate();
@@ -15,12 +16,16 @@ const EditProduct = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await getProductById(productId);
+      try {
+        const response = await getProductById(productId);
 
-      if (response && response.product) {
-        setProduct(response.product);
-      } else {
-        setProduct({});
+        if (response && response.product) {
+          setProduct(response.product);
+        }
+      } catch (err) {
+        console.error('error fetching product: ', err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -29,18 +34,27 @@ const EditProduct = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-    }));
+    if (name === 'price') {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        [name]: value ? parseFloat(value) : 0, // Convert to number, default to 0 if empty
+      }));
+    } else {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        [name]: value,
+      }));
+    }
   };
 
   const handleEditProduct = async (e) => {
-
     try {
-      const updatedProduct = await updateProduct(productId, product);
-      console.log('UPDATED PRODUCT: ', updatedProduct)
-      if (!updatedProduct) {
+      const updatedProduct = {
+        ...product,
+        price: typeof product.price === 'number' ? product.price : parseFloat(product.price)
+      };
+      const response = await updateProduct(productId, updatedProduct);
+      if (!response) {
         setError("Invalid input");
       } else {
         navigate("/");
@@ -50,7 +64,13 @@ const EditProduct = () => {
       setError("An error occurred. Please try again.");
     }
   };
+  if (loading) {
+    return <Typography>Loading...</Typography>
+  }
 
+  console.log('PRODUCT: ', product);
+  console.log('PROD TITLE: ', product.title);
+  console.log('PROD PRICE: ', product.price);
   return (
     <Container maxWidth="sm" sx={{ marginTop: 4, backgroundColor: "#121212" }}>
       <Box
@@ -63,7 +83,7 @@ const EditProduct = () => {
         }}
       >
         <Typography variant="h4" gutterBottom align="center">
-          {product && product.title ? product.title : "Edit Product"}
+          Edit Product
         </Typography>
         <FormProvider onSubmit={handleEditProduct}>
           <TextInput
@@ -71,12 +91,14 @@ const EditProduct = () => {
             name="title"
             value={product.title || ""}
             onChange={handleInputChange}
+            multiline
           />
           <TextInput
             label="Description"
             name="description"
             value={product.description || ""}
             onChange={handleInputChange}
+            multiline
           />
           <TextInput
             label="Price"
