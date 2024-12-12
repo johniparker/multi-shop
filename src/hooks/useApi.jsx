@@ -26,6 +26,21 @@ const useApi = () => {
     }
   };
 
+  const getProductTypes = async () => {
+    try {
+      const response = await getPublishedProducts();
+      if (response && response.products) {
+        // Extract unique product types from the response
+        const types = Array.from(
+          new Set(response.products.map((product) => product.product_type))
+        );
+        return types;
+      }
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
   // Get all products
   const getAllProducts = async (options = {}) => {
     try {
@@ -87,6 +102,7 @@ const useApi = () => {
   return {
     getPublishedProducts,
     getAllProducts,
+    getProductTypes,
     getProductById,
     updateProduct,
     getAdminSettings,

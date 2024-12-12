@@ -12,7 +12,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = ({ setProductType }) => {
-  const { getPublishedProducts, error } = useApi();
+  const { getProductTypes, error } = useApi();
   const [productTypes, setProductTypes] = useState([]);
   const [selectedType, setSelectedType] = useState("");
 
@@ -20,18 +20,14 @@ const Navbar = ({ setProductType }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchAndExtractProductTypes = async () => {
-      const response = await getPublishedProducts();
-      if (response && response.products) {
-        // Extract unique product types from the response
-        const types = Array.from(
-          new Set(response.products.map((product) => product.product_type))
-        );
+    const fetchProductTypes = async () => {
+      const types = await getProductTypes();
+      if (types) {
         setProductTypes(types); // Update state with fetched product types
       }
     };
 
-    fetchAndExtractProductTypes();
+    fetchProductTypes();
   }, []);
 
   const handleProductTypeClick = (type) => {

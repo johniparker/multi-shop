@@ -12,7 +12,7 @@ const Product = ({ product }) => {
   }
 
   return (
-    <Card sx={{ maxWidth: 300, margin: 2 }}>
+    <Card sx={{ margin: 2 }}>
       <CardMedia
         component="img"
         height="200"
