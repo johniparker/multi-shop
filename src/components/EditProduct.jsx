@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { FormProvider } from "../context/FormProvider";
@@ -8,28 +8,38 @@ import { Box, Typography, Container, Alert } from "@mui/material";
 
 const EditProduct = () => {
   const [error, setError] = useState("");
+  const [product, setProduct] = useState({});
   const { getProductById, updateProduct } = useApi();
   const navigate = useNavigate();
   const productId = useParams().productId;
-  console.log('PRODUCT ID: ', productId);
 
-  const fetchProduct = async () => {
-    const fetchedProduct = getProductById(productId);
-    console.log('FETCHED PROD: ', fetchedProduct)
-    return fetchedProduct;
-  }
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const response = await getProductById(productId);
 
-  const product = fetchProduct();
+      if (response && response.product) {
+        setProduct(response.product);
+      } else {
+        setProduct({});
+      }
+    };
 
-  console.log("PRODUCT: ", product);
+    fetchProduct();
+  }, [productId]);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      [name]: value,
+    }));
+  };
 
-  const handleEditProduct = async (formData) => {
-    const newProduct = formData;
+  const handleEditProduct = async (e) => {
 
     try {
-      const updatedProduct = await updateProduct(productId, newProduct);
-
+      const updatedProduct = await updateProduct(productId, product);
+      console.log('UPDATED PRODUCT: ', updatedProduct)
       if (!updatedProduct) {
         setError("Invalid input");
       } else {
@@ -53,15 +63,40 @@ const EditProduct = () => {
         }}
       >
         <Typography variant="h4" gutterBottom align="center">
-          {product && product.title ? product.title : "Product"}
+          {product && product.title ? product.title : "Edit Product"}
         </Typography>
         <FormProvider onSubmit={handleEditProduct}>
-          <TextInput />
+          <TextInput
+            label="Title"
+            name="title"
+            value={product.title || ""}
+            onChange={handleInputChange}
+          />
+          <TextInput
+            label="Description"
+            name="description"
+            value={product.description || ""}
+            onChange={handleInputChange}
+          />
+          <TextInput
+            label="Price"
+            name="price"
+            type="number"
+            value={product.price || ""}
+            onChange={handleInputChange}
+          />
           {error && (
-              <Alert severity="error" sx={{ marginTop: 2, backgroundColor: "#D32F2F", color: "#FFFFFF" }}>
-                {error}
-              </Alert>
-            )}
+            <Alert
+              severity="error"
+              sx={{
+                marginTop: 2,
+                backgroundColor: "#D32F2F",
+                color: "#FFFFFF",
+              }}
+            >
+              {error}
+            </Alert>
+          )}
           <SubmitButton label="Submit Edits" />
         </FormProvider>
       </Box>
