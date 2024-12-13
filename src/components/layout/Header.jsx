@@ -17,18 +17,18 @@ const Header = ({ toggleNavbar }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          Welcome!
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          Welcome to the shop!
         </Typography>
         {user ? (
-          <Button onClick={logout} color="red" variant="outlined">
+          <Button onClick={logout} color="black" variant="outlined">
             Logout
           </Button>
         ) : (
           <Button
             component={Link}
             to="/login"
-            color="red"
+            color="black"
             variant="outlined"
           >
             Login

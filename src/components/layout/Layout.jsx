@@ -19,7 +19,7 @@ const Layout = () => {
 
   return (
     <CartProvider>
-      <Box sx={{ display: "flex", height: "100vh" }}>
+      <Box sx={{ display: "flex", height: "100vh", flexDirection: "column" }}>
         {/* Header positioned at the top */}
         <Box sx={{ width: "100%" }}>
           <Header toggleNavbar={toggleNavbar} />
@@ -50,8 +50,10 @@ const Layout = () => {
             p: 3,
             marginTop: "64px", // Space for the fixed header
             marginLeft: isNavbarVisible ? "240px" : 0, // Adjust based on navbar visibility
+            marginRight: 0,
             overflowY: "auto", // Allow scrolling for main content
             height: "calc(100vh - 64px)", // Full height minus header height
+            transition: "margin-left 0.3s ease-in-out", // Smooth transition for margin when navbar toggles
           }}
         >
           <Routes>

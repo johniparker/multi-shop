@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
-import { Grid, Typography, Box, List, Button, ListItem, ListItemText } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Box,
+  List,
+  Button,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 
 const Cart = () => {
   const {
@@ -15,25 +23,27 @@ const Cart = () => {
   return (
     <Box
       sx={{
-        width: 300,
-        position: "fixed",
-        top: 64, // Below the header
-        right: 0, // Align to the right side of the screen
+        width: { xs: "100%", sm: 300 }, // Full width on small screens, fixed width otherwise
+        position: { xs: "relative", sm: "fixed" }, // Stacked on small screens, fixed on larger ones
+        top: { sm: 64 }, // Below the header on larger screens
+        right: 0,
         bottom: 0,
         bgcolor: "background.paper",
         boxShadow: 3,
         p: 2,
         overflowY: "auto",
-        zIndex: 1000, // To keep it above other content
+        zIndex: 1000, // Above other content
       }}
     >
-      <Typography variant="h6" sx={{ color: 'black' }}>Cart</Typography>
+      <Typography variant="h6" sx={{ color: "black" }}>
+        Cart
+      </Typography>
       <List>
         {cart.map((item) => (
           <ListItem key={item.product.id}>
             <ListItemText
               primary={`${item.product.title} - ${item.quantity} x $${item.product.price}`}
-              sx={{ color: 'black' }}
+              sx={{ color: "black" }}
             />
             <Button onClick={() => increaseQuantity(item.product.id)}>+</Button>
             <Button onClick={() => decreaseQuantity(item.product.id)}>-</Button>
@@ -43,7 +53,7 @@ const Cart = () => {
           </ListItem>
         ))}
       </List>
-      <Typography variant="h6" sx={{ color: 'black' }}>
+      <Typography variant="h6" sx={{ color: "black" }}>
         Total Price: ${totalPrice.toFixed(2)}
       </Typography>
       <Button onClick={checkout} variant="contained">

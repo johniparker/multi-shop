@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 // Create a context for the cart
 const CartContext = createContext();
@@ -13,6 +13,10 @@ export const CartProvider = ({ children }) => {
     const total = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
     setTotalPrice(total);
   };
+
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [cart]);
 
   // Add a product to the cart (or increment quantity if already in cart)
   const addToCart = (product) => {

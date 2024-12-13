@@ -70,7 +70,7 @@ const Products = ({ productType, searchTerm }) => {
   }, [productType, searchTerm]);
 
   return (
-    <Box>
+    <Box sx={{ padding: { xs: 2, sm: 3, md: 4 } }}>
       <Typography variant="h4" component="h1" gutterBottom>
         {user ? "Admin Products" : "Products"}
       </Typography>
